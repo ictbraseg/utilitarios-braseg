@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Utilitários BraSeg</title>
+	<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+	<nav class="sidebar">
+		<div class="sidebar-header">
+			<h3>Painel TI</h3>
+		</div>
+		<ul class="nav-links">
+			<li><a href="#" onclick="showSection('formatadores')" id="link-formatadores" class="active">Formatadores</a>
+			</li>
+			<li><a href="#" onclick="showSection('verificador-cep')" id="link-verificador">Verificador de CEP</a></li>
+			<li><a href="#" onclick="showSection('geradores')" id="link-geradores">Geradores</a></li>
+			<li>
+				<a href="#" onclick="showSection('calculadoras')" id="link-calculadoras">Calculadoras</a>
+				<ul>
+					<li>
+						<a href="#" onclick="showSection('calculadora-data')" id="link-calculadora-data">De data</a>
+					</li>
+				</ul>
+			</li>
+			<li><a href="#" onclick="showSection('links')" id="link-uteis">Link Uteis</a></li>
+			<li><a href="#" onclick="showSection('limpador')" id="link-limpador">Limpar Caracteres</a></li>
+		</ul>
+
+	</nav>
+
+	<main class="content">
+		<div id="section-formatadores" class="container active-section">
+			<h2>Formatadores</h2>
+
+			<div class="input-group">
+				<label for="cpf">CPF:</label>
+				<input type="text" id="cpf" placeholder="000.000.000-00" maxlength="14" oninput="processarCPF(this)">
+				<div id="cpf-status" class="status-msg">Aguardando...</div>
+			</div>
+
+			<div class="input-group">
+				<label for="cnpj">CNPJ:</label>
+				<input type="text" id="cnpj" placeholder="00.000.000/0000-00" maxlength="18"
+					oninput="processarCNPJ(this)">
+				<div id="cnpj-status" class="status-msg">Aguardando...</div>
+			</div>
+
+			<div class="input-group">
+				<label for="cep-format">CEP:</label>
+				<input type="text" id="cep-format" placeholder="00000-000" maxlength="9" oninput="formatarCEP(this)">
+			</div>
+		</div>
+
+		<div id="section-verificador-cep" class="container" style="display: none;">
+			<h2>Verificador de CEP</h2>
+			<p class="subtitle">Consulta em tempo real via ViaCEP.</p>
+			<div class="input-group">
+				<label for="cep-busca">Digite o CEP:</label>
+				<input type="text" id="cep-busca" placeholder="00000-000" maxlength="9" oninput="consultarCEP(this)">
+				<div id="cep-status" class="status-msg">Aguardando 8 dígitos...</div>
+			</div>
+			<div id="resultado-cep" class="resultado-box"></div>
+		</div>
+
+		<div id="section-geradores" class="container">
+			<h2>Geradores</h2>
+			<p class="subtitle">Gere números válidos para testes de sistema.</p>
+
+			<div class="input-group">
+				<label>Gerar CPF:</label>
+				<div style="display: flex; gap: 10px;">
+					<input type="text" id="display-cpf" readonly placeholder="000.000.000-00">
+					<button class="btn-generate" onclick="gerarEExibirCPF()">Gerar</button>
+				</div>
+			</div>
+
+			<div class="input-group">
+				<label>Gerar CNPJ:</label>
+				<div style="display: flex; gap: 10px;">
+					<input type="text" id="display-cnpj" readonly placeholder="00.000.000/0000-00">
+					<button class="btn-generate" onclick="gerarEExibirCNPJ()">Gerar</button>
+				</div>
+			</div>
+			<p style="font-size: 11px; color: #999; text-align: center;">Os números gerados são válidos apenas para fins
+				de teste.</p>
+		</div>
+
+		<!-- Seção: Calculadora de Data -->
+		<div id="section-calculadora-data" class="container" style="display: none;">
+			<h2>Calculadora de Data</h2>
+			<p class="subtitle">Adicione ou subtraia tempo de uma data específica.</p>
+
+			<div class="input-group">
+				<label for="data-base">Data Inicial:</label>
+				<input type="date" id="data-base">
+			</div>
+
+			<div class="input-group">
+				<label for="data-operacao">Operação:</label>
+				<div style="display: flex; gap: 10px;">
+					<input type="number" id="data-quantidade" placeholder="Ex: 30" style="flex: 1;">
+					<select id="data-unidade" style="padding: 10px; border-radius: 6px; border: 1px solid #ddd;">
+						<option value="days">Dias</option>
+						<option value="months">Meses</option>
+						<option value="years">Anos</option>
+					</select>
+				</div>
+			</div>
+
+			<div style="display: flex; gap: 10px; margin-bottom: 20px;">
+				<button class="btn-generate" style="flex: 1; padding: 12px;" onclick="calcularData('somar')">Somar
+					(+)</button>
+				<button class="btn-generate" style="flex: 1; padding: 12px; background-color: #e74c3c; color: white;"
+					onclick="calcularData('subtrair')">Subtrair (-)</button>
+			</div>
+
+			<div id="resultado-data" class="resultado-box">
+				<!-- O resultado aparecerá aqui -->
+			</div>
+		</div>
+
+		<div id="section-links" class="container" style="display: none;">
+			<h2>Links Úteis</h2>
+			<p class="subtitle">Acesso rápido a ferramentas externas.</p>
+
+			<div class="links-grid">
+				<a href="https://consultadanfe.com/" target="_blank" class="link-card">
+					<div class="link-icon">📄</div>
+					<div class="link-info">
+						<strong>Consulta DANFE</strong>
+						<span>Consultar Nota Fiscal</span>
+					</div>
+				</a>
+
+				<a href="https://cnpja.com/" target="_blank" class="link-card">
+					<div class="link-icon">🏢</div>
+					<div class="link-info">
+						<strong>CNPJ Já</strong>
+						<span>Consulta de Empresas</span>
+					</div>
+				</a>
+			</div>
+		</div>
+
+		<div id="section-limpador" class="container" style="display: none;">
+			<h2>Limpar Caracteres</h2>
+			<p class="subtitle">Remove pontos, traços, espaços e símbolos.</p>
+
+			<div class="input-group">
+				<label for="input-sujo">Texto Original:</label>
+				<textarea id="input-sujo" rows="4" placeholder="Cole aqui o texto com pontos, espaços ou símbolos..."
+					style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #ddd; font-family: sans-serif;"
+					oninput="limparTexto()"></textarea>
+			</div>
+
+			<div class="input-group">
+				<label for="output-limpo">Resultado (Apenas Letras e Números):</label>
+				<div style="position: relative;">
+					<input type="text" id="output-limpo" readonly placeholder="O resultado aparecerá aqui..."
+						style="width: 100%; padding-right: 40px;">
+					<button onclick="copiarTexto()" style="position: absolute; right: 5px; top: 50%; transform: translateY(-50%); 
+                    background: none; border: none; cursor: pointer; font-size: 18px;" title="Copiar">
+						📋
+					</button>
+				</div>
+			</div>
+		</div>
+
+	</main>
+
+	<script src="script.js"></script>
+</body>
+
+</html>
