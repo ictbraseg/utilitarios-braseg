@@ -15,20 +15,19 @@
 			<h3>Painel TI</h3>
 		</div>
 		<ul class="nav-links">
-			<li><a href="#" onclick="showSection('formatadores')" id="link-formatadores" class="active">Formatadores</a>
-			</li>
+			<li><a href="#" onclick="showSection('formatadores')" id="link-formatadores" class="active">Formatadores</a></li>
+			<li><a href="#" onclick="showSection('texto-format')" id="link-texto-format">Formatar Texto</a></li>
+			<li><a href="#" onclick="showSection('limpador')" id="link-limpador">Limpar Caracteres</a></li>
 			<li><a href="#" onclick="showSection('verificador-cep')" id="link-verificador">Verificador de CEP</a></li>
 			<li><a href="#" onclick="showSection('geradores')" id="link-geradores">Geradores</a></li>
 			<li>
 				<a href="#" onclick="showSection('calculadoras')" id="link-calculadoras">Calculadoras</a>
 				<ul>
-					<li>
-						<a href="#" onclick="showSection('calculadora-data')" id="link-calculadora-data">De data</a>
-					</li>
+					<li><a href="#" onclick="showSection('calculadora-data')" id="link-calculadora-data">De data</a></li>
+					<li><a href="#" onclick="showSection('calculadora-juros')" id="link-calculadora-juros">De juros</a></li>
 				</ul>
 			</li>
 			<li><a href="#" onclick="showSection('links')" id="link-uteis">Link Uteis</a></li>
-			<li><a href="#" onclick="showSection('limpador')" id="link-limpador">Limpar Caracteres</a></li>
 		</ul>
 
 	</nav>
@@ -166,6 +165,62 @@
 					<button onclick="copiarTexto()" style="position: absolute; right: 5px; top: 50%; transform: translateY(-50%); 
                     background: none; border: none; cursor: pointer; font-size: 18px;" title="Copiar">
 						📋
+					</button>
+				</div>
+			</div>
+		</div>
+
+		<div id="section-calculadora-juros" class="container" style="display: none;">
+			<h2>Cálculo de Juros de Boleto</h2>
+			<p class="subtitle">Cálculo baseado em Multa (2%) e Juros de Mora (1% a.m).</p>
+
+			<div class="input-group">
+				<label>Valor Original (R$):</label>
+				<input type="number" id="juros-valor" placeholder="0,00">
+			</div>
+
+			<div class="input-group">
+				<label>Data de Vencimento:</label>
+				<input type="date" id="juros-vencimento">
+			</div>
+
+			<div class="input-group">
+				<label>Data de Pagamento:</label>
+				<input type="date" id="juros-pagamento">
+			</div>
+
+			<button class="btn-generate" style="width: 100%; margin-top: 10px;" onclick="calcularJurosBoleto()">Calcular
+				Atualização</button>
+
+			<div id="resultado-juros" class="resultado-box"></div>
+		</div>
+
+		<div id="section-texto-format" class="container" style="display: none;">
+			<h2>Formatação de Texto</h2>
+			<p class="subtitle">Altere a capitalização do seu texto rapidamente.</p>
+		
+			<div class="input-group">
+				<label for="texto-input">Texto Original:</label>
+				<textarea id="texto-input" rows="4" placeholder="Digite ou cole seu texto aqui..."
+					style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #ddd;"></textarea>
+			</div>
+		
+			<div class="grid-botoes" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px;">
+				<button class="btn-generate" onclick="transformarTexto('UPPER')">MAIÚSCULO</button>
+				<button class="btn-generate" onclick="transformarTexto('LOWER')">minúsculo</button>
+				<button class="btn-generate" onclick="transformarTexto('TITLE')">Tipo Título</button>
+				<button class="btn-generate" onclick="transformarTexto('SENTENCE')">Tipo Sentença</button>
+			</div>
+		
+			<div class="input-group">
+				<label>Resultado:</label>
+				<div style="position: relative;">
+					<textarea id="texto-output" readonly rows="4"
+						style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #eee; background: #f9f9f9;"></textarea>
+					<button onclick="copiarTextoFormatado()"
+						style="position: absolute; right: 10px; bottom: 10px; 
+		                    background: #4ecca3; color: white; border: none; border-radius: 4px; padding: 5px 10px; cursor: pointer;">
+						Copiar
 					</button>
 				</div>
 			</div>

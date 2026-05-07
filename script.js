@@ -1,7 +1,7 @@
 // --- Gerenciamento de Navegação ---
 function showSection(sectionId) {
     // Adicione 'limpador' na lista
-    const sections = ['formatadores', 'verificador-cep', 'geradores', 'calculadora-data', 'links', 'limpador'];
+    const sections = ['formatadores', 'verificador-cep', 'geradores', 'calculadora-data', 'links', 'limpador', 'calculo-juros', 'texto-format'];
 
     sections.forEach(s => {
         const element = document.getElementById('section-' + s);
@@ -249,4 +249,72 @@ function copiarTexto() {
         document.execCommand('copy');
         alert("Texto copiado para a área de transferência!");
     }
+}
+
+function calcularJurosBoleto() {
+    const valor = parseFloat(document.getElementById('juros-valor').value);
+    const venc = new Date(document.getElementById('juros-vencimento').value + 'T00:00:00');
+    const pag = new Date(document.getElementById('juros-pagamento').value + 'T00:00:00');
+    const resultado = document.getElementById('resultado-juros');
+
+    if (!valor || isNaN(venc) || isNaN(pag)) {
+        alert("Preencha todos os campos.");
+        return;
+    }
+
+    const diffDays = Math.ceil((pag - venc) / (1000 * 60 * 60 * 24));
+
+    if (diffDays <= 0) {
+        resultado.style.display = 'block';
+        resultado.innerHTML = "Boleto não está vencido.";
+        return;
+    }
+
+    const multa = valor * 0.02; // Multa 2%
+    const jurosDia = (valor * 0.01) / 30; // Juros 1% ao mês
+    const totalJuros = jurosDia * diffDays;
+    const total = valor + multa + totalJuros;
+
+    resultado.style.display = 'block';
+    resultado.innerHTML = `
+        <div class="resultado-item"><strong>Atraso:</strong> ${diffDays} dias</div>
+        <div class="resultado-item"><strong>Multa fixa (2%):</strong> R$ ${multa.toFixed(2)}</div>
+        <div class="resultado-item"><strong>Juros acumulados:</strong> R$ ${totalJuros.toFixed(2)}</div>
+        <hr style="border:0; border-top:1px solid #ddd; margin:10px 0;">
+        <div class="resultado-item" style="font-size: 18px;"><strong>Total Atualizado:</strong> R$ ${total.toFixed(2)}</div>
+    `;
+}
+
+// --- Funções de Formatação de Texto ---
+function transformarTexto(tipo) {
+    const input = document.getElementById('texto-input').value;
+    let resultado = "";
+
+    switch (tipo) {
+        case 'UPPER':
+            resultado = input.toUpperCase();
+            break;
+        case 'LOWER':
+            resultado = input.toLowerCase();
+            break;
+        case 'TITLE':
+            // Converte para minúsculo e depois a primeira letra de cada palavra para maiúsculo
+            resultado = input.toLowerCase().split(' ').map(word => {
+                return word.charAt(0).toUpperCase() + word.slice(1);
+            }).join(' ');
+            break;
+        case 'SENTENCE':
+            // Apenas a primeira letra do texto em maiúsculo, o resto minúsculo
+            resultado = input.toLowerCase().charAt(0).toUpperCase() + input.slice(1).toLowerCase();
+            break;
+    }
+
+    document.getElementById('texto-output').value = resultado;
+}
+
+function copiarTextoFormatado() {
+    const output = document.getElementById('texto-output');
+    output.select();
+    document.execCommand('copy');
+    alert("Texto copiado!");
 }
