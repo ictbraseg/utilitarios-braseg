@@ -12,10 +12,11 @@
 
 	<nav class="sidebar">
 		<div class="sidebar-header">
-			<h3>Painel TI</h3>
+			<h3>Painel de Ferramentas</h3>
 		</div>
 		<ul class="nav-links">
-			<li><a href="#" onclick="showSection('formatadores')" id="link-formatadores" class="active">Formatadores</a></li>
+			<li><a href="#" onclick="showSection('formatadores')" id="link-formatadores" class="active">Formatadores</a>
+			</li>
 			<li><a href="#" onclick="showSection('texto-format')" id="link-texto-format">Formatar Texto</a></li>
 			<li><a href="#" onclick="showSection('limpador')" id="link-limpador">Limpar Caracteres</a></li>
 			<li><a href="#" onclick="showSection('verificador-cep')" id="link-verificador">Verificador de CEP</a></li>
@@ -23,8 +24,18 @@
 			<li>
 				<a href="#" onclick="showSection('calculadoras')" id="link-calculadoras">Calculadoras</a>
 				<ul>
-					<li><a href="#" onclick="showSection('calculadora-data')" id="link-calculadora-data">De data</a></li>
-					<li><a href="#" onclick="showSection('calculadora-juros')" id="link-calculadora-juros">De juros</a></li>
+					<li><a href="#" onclick="showSection('calculadora-data')" id="link-calculadora-data">De data</a>
+					</li>
+					<li><a href="#" onclick="showSection('calculadora-juros')" id="link-calculadora-juros">De juros</a>
+					</li>
+				</ul>
+			</li>
+			<li>
+				<a href="#" onclick="showSection('conversores')" id="link-conversores">Conversores</a>
+				<ul>
+					<li><a href="#" onclick="showSection('conversor-pessoa')" id="link-conversor-pessoa">De CPF para CNPJ</a></li>
+					<li><a href="#" onclick="showSection('conversor-moedas')" id="link-conversor-moedas">De moedas</a></li>
+					<li><a href="#" onclick="showSection('conversor-temperatura')" id="link-conversor-temperatura">De temperatura</a></li>
 				</ul>
 			</li>
 			<li><a href="#" onclick="showSection('links')" id="link-uteis">Link Uteis</a></li>
@@ -205,20 +216,21 @@
 		<div id="section-texto-format" class="container" style="display: none;">
 			<h2>Formatação de Texto</h2>
 			<p class="subtitle">Altere a capitalização do seu texto rapidamente.</p>
-		
+
 			<div class="input-group">
 				<label for="texto-input">Texto Original:</label>
 				<textarea id="texto-input" rows="4" placeholder="Digite ou cole seu texto aqui..."
 					style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #ddd;"></textarea>
 			</div>
-		
-			<div class="grid-botoes" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px;">
+
+			<div class="grid-botoes"
+				style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px;">
 				<button class="btn-generate" onclick="transformarTexto('UPPER')">MAIÚSCULO</button>
 				<button class="btn-generate" onclick="transformarTexto('LOWER')">minúsculo</button>
 				<button class="btn-generate" onclick="transformarTexto('TITLE')">Tipo Título</button>
 				<button class="btn-generate" onclick="transformarTexto('SENTENCE')">Tipo Sentença</button>
 			</div>
-		
+
 			<div class="input-group">
 				<label>Resultado:</label>
 				<div style="position: relative;">
@@ -231,6 +243,30 @@
 					</button>
 				</div>
 			</div>
+		</div>
+
+		<div id="section-conversor-pessoa" class="container" style="display: none;">
+			<h2>Conversor CPF ➔ CNPJ</h2>
+			<p class="subtitle">Gera um CNPJ (filial 0001) a partir da raiz de um CPF.</p>
+
+			<div class="input-group">
+				<label for="cpf-origem">Digite o CPF:</label>
+				<input type="text" id="cpf-origem" placeholder="000.000.000-00" maxlength="14"
+					oninput="converterCpfParaCnpj(this)">
+			</div>
+
+			<div class="input-group">
+				<label>CNPJ Gerado:</label>
+				<div style="position: relative;">
+					<input type="text" id="cnpj-destino" readonly placeholder="O resultado aparecerá aqui..."
+						style="width: 100%; padding-right: 40px; background-color: #f9f9f9;">
+					<button onclick="copiarCnpjConvertido()" style="position: absolute; right: 5px; top: 50%; transform: translateY(-50%); 
+                    background: none; border: none; cursor: pointer; font-size: 18px;" title="Copiar">
+						📋
+					</button>
+				</div>
+			</div>
+			<p style="font-size: 11px; color: #999; text-align: center;">A lógica utiliza os 8 primeiros dígitos do CPF + sufixo 0001.</p>
 		</div>
 
 	</main>

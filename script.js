@@ -1,11 +1,13 @@
 // --- Gerenciamento de Navegação ---
 function showSection(sectionId) {
-    // Adicione 'limpador' na lista
-    const sections = ['formatadores', 'verificador-cep', 'geradores', 'calculadora-data', 'links', 'limpador', 'calculo-juros', 'texto-format'];
-
+    const sections = [
+        'formatadores', 'texto-format', 'limpador', 'verificador-cep', 
+        'geradores', 'calculadora-data', 'calculadora-juros', 
+        'conversor-pessoa', 'conversor-moedas', 'conversor-temperatura', 'links'
+    ];
+    
     sections.forEach(s => {
         const element = document.getElementById('section-' + s);
-        // Mapeamento de IDs de link especiais
         let linkId = 'link-' + s;
         if (s === 'verificador-cep') linkId = 'link-verificador';
         if (s === 'links') linkId = 'link-uteis';
@@ -25,12 +27,12 @@ function showSection(sectionId) {
         targetSection.classList.add('active-section');
     }
 
-    let targetLinkId = 'link-' + sectionId;
-    if (sectionId === 'verificador-cep') targetLinkId = 'link-verificador';
-    if (sectionId === 'links') targetLinkId = 'link-uteis';
-    
-    const targetLink = document.getElementById(targetLinkId);
-    if (targetLink) targetLink.classList.add('active');
+    // Ativar o link no menu
+    let tLinkId = 'link-' + sectionId;
+    if (sectionId === 'verificador-cep') tLinkId = 'link-verificador';
+    if (sectionId === 'links') tLinkId = 'link-uteis';
+    const tLink = document.getElementById(tLinkId);
+    if (tLink) tLink.classList.add('active');
 }
 
 // --- Funções de Máscara e Validação ---
@@ -317,4 +319,60 @@ function copiarTextoFormatado() {
     output.select();
     document.execCommand('copy');
     alert("Texto copiado!");
+}
+
+function converterCpfParaCnpj(input) {
+    // Aplica máscara de CPF enquanto digita para facilitar
+    let cpf = input.value.replace(/\D/g, '');
+    if (cpf.length > 11) cpf = cpf.substring(0, 11);
+    
+    // Atualiza o valor do input com máscara de CPF
+    input.value = cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
+
+    const displayCnpj = document.getElementById('cnpj-destino');
+
+    if (cpf.length === 11) {
+        try {
+            const baseCnpj = cpf.substring(0, 8) + "0001";
+            
+            const mult1 = [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
+            const mult2 = [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
+
+            let temp = baseCnpj;
+            
+            // Primeiro dígito verificador
+            let soma = 0;
+            for (let i = 0; i < 12; i++) {
+                soma += parseInt(temp[i]) * mult1[i];
+            }
+            let resto = soma % 11;
+            let dv1 = resto < 2 ? 0 : 11 - resto;
+
+            temp += dv1;
+
+            // Segundo dígito verificador
+            soma = 0;
+            for (let i = 0; i < 13; i++) {
+                soma += parseInt(temp[i]) * mult2[i];
+            }
+            resto = soma % 11;
+            let dv2 = resto < 2 ? 0 : 11 - resto;
+
+            const cnpjFinal = baseCnpj + dv1 + dv2;
+            // Exibe formatado: 00.000.000/0000-00
+            displayCnpj.value = cnpjFinal.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, "$1.$2.$3/$4-$5");
+        } catch (e) {
+            displayCnpj.value = "Erro no cálculo";
+        }
+    } else {
+        displayCnpj.value = "";
+    }
+}
+
+function copiarCnpjConvertido() {
+    const output = document.getElementById('cnpj-destino');
+    if (output.value && output.value !== "") {
+        navigator.clipboard.writeText(output.value);
+        alert("CNPJ copiado!");
+    }
 }
